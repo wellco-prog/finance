@@ -1,0 +1,129 @@
+
+@font-face {
+    src: url('font/Roboto-Light.ttf');
+    font-family: "Roboto";
+}
+:root {
+    /*--blue:#0a66ff;*/
+    /*--dark:#12325a;*/
+    /*--muted:#6b7280;*/
+    /*--bg:#f7f8fb;*/
+    --accent: #0b63ff;
+    /*--panel:#ffffff;*/
+}
+
+
+* {
+    box-sizing: border-box
+}
+
+body {
+    font-family: "Roboto", sans-serif;
+    margin: 0;
+    /*color:var(--dark);*/
+    /*background:var(--bg)*/
+}
+
+.logo img {
+    height: 48px
+}
+h1 {
+    font-weight: 500;
+}
+
+.login-page {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+}
+
+.login-card {
+    width: 520px;
+    max-width: 92%;
+    padding: 48px;
+    border-radius: 8px;
+    text-align: center
+}
+
+.login-card .logo {
+    justify-content: center;
+}
+
+.login-card h1 {
+    margin: 60px 0 20px;
+    font-weight: 500;
+    font-size: 40px;
+    text-align: center;
+    color: #052c65;
+}
+
+.form {
+    max-width: 397px;
+    margin: 0 auto;
+    text-align: left
+}
+
+.field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid #e6e9ef;
+    border-radius: 4px;
+    margin-bottom: 10px
+}
+
+.svg-image{
+    background: #e9ecef;
+    border: 1px solid #e6e9ef;
+    padding: 10px 12px;
+}
+input[type="text"]::placeholder {
+    font-family: var(--font-family), sans-serif;
+    font-size: 15px;
+    line-height: 160%;
+    color: #6c757d;
+}
+
+.field input {
+    border: 0;
+    outline: 0;
+    width: 100%;
+    font-size: 14px
+
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    margin: 8px 0 20px
+}
+
+.btn {
+    display: inline-block;
+    width: 100%;
+    padding: 10px 16px;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #fff;
+    text-align: center;
+    border: 0;
+    cursor: pointer;
+    outline: none;
+    font-family: var(--font-family) sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.small {
+    font-size: 13px;
+    text-align: center;
+    margin-top: 10px
+}
+
+.small a {
+    color: var(--accent);
+    text-decoration: underline
+}
+

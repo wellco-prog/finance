@@ -1,0 +1,105 @@
+
+.category{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.category-input{
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    max-width: 397px;
+    padding: 10px 0 10px 16px;
+    outline: none;
+}
+
+.category-input::placeholder {
+    font-size: 15px;
+    color: #6c757d;
+}
+
+.button-control{
+    grid-template-columns: repeat(auto-fit, minmax(200px, min(352px,33%)));
+display: flex;
+    align-items: center;
+    padding-top: 20px;
+}
+.btn-edit{
+    background: #198754;
+    border-radius: 5px;
+    padding: 12px 16px;
+    width: 88px;
+    height: 38px;
+    color: #fff;
+    font-size: 14px;
+    text-align: center;
+    outline: none;
+    border: none;
+    margin-right: 10px;
+}
+
+.btn-delete {
+    border-radius: 5px;
+    padding: 12px 16px;
+    width: 88px;
+    background: #dc3545;
+    font-size: 14px;
+    text-align: center;
+    color: #fff;
+    outline: none;
+    border: none;
+    height: 38px;
+}
+.btn-edit:hover, .btn-delete:hover, .category svg:hover{
+    cursor: pointer;
+}
+.popup-delete{
+    display: none;
+    width: 530px;
+    border: 1px solid #CED4DA;
+    border-radius: 5px;
+}
+.popup-container{
+    padding: 40px 40px 40px 40px;
+    text-align: center;
+}
+.popup-btn{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding-top: 20px;
+}
+.btn-edit.popup-ed{
+    font-size: 14px;
+    text-align: center;
+    color: #fff;
+    background: #198754;
+    border-radius: 5px;
+    padding: 12px 16px;
+    width: 111px;
+    height: 38px;
+box-sizing: border-box;
+}
+
+.btn-delete.popup-del{
+    background: #dc3545;
+    border-radius: 5px;
+    padding: 12px 16px;
+    width: 107px;
+    font-size: 14px;
+    text-align: center;
+    color: #fff;
+    height: 38px;
+}
+@media (max-width: 900px) {
+    .charts {
+        grid-template-columns:1fr;
+    }
+
+
+
+    .main {
+        padding: 28px;
+    }
+}

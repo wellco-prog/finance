@@ -1,0 +1,168 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+@font-face {
+    src: url('font/Roboto-Light.ttf');
+    font-family: "Roboto";
+}
+:root {
+    /*--blue:#0a66ff;*/
+    /*--dark:#12325a;*/
+    /*--muted:#6b7280;*/
+    /*--bg:#f7f8fb;*/
+    --primary: #007bff;
+    --accent: #0d6efd;
+    --border: #d9d9d9;
+}
+
+/**{box-sizing:border-box}*/
+
+body {
+    font-family: "Roboto", sans-serif;
+    margin: 0;
+    position: relative;
+}
+
+.app {
+    display: flex;
+    min-height: 100vh;
+    max-width: 1440px;
+}
+
+.sidebar {
+    width: 219px;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 70px 20px 50px;
+    border-bottom: 1px solid var(--border);
+}
+
+.nav {
+    margin-top: 60px;
+    padding: 0 20px 0 21px;
+}
+
+.nav-item span {
+    display: flex;
+    align-items: center;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    max-width: 178px;
+    gap: 10px;
+    padding: 12px 0 12px 16px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.15s;
+    box-sizing: border-box;
+    border: 0 solid #fff;
+    border-radius: 5px;
+}
+
+#nav-category.active {
+
+    border-radius: 5px 5px 0 0;
+}
+
+.nav-item.active {
+    background: var(--accent);
+    color: #fff;
+}
+
+.nav-item.active .arrow {
+    transform: rotate(90deg);
+    transform-origin: 90%;
+}
+.nav-category-menu {
+    border-right: 1px solid var(--accent);
+    border-left: 1px solid var(--accent);
+    border-bottom: 1px solid var(--accent);
+    box-sizing: border-box;
+}
+
+
+.nav-category-menu .nav-item:nth-child(1) {
+    border-radius: 0;
+}
+
+.nav-category-menu .nav-item:nth-child(2) {
+    border-radius: 0 0 5px 5px;
+
+}
+
+.nav-item:hover {
+    background: var(--accent);
+    color: #fff;
+    cursor: pointer;
+}
+
+.nav-item:hover svg path, .nav-item.active svg path {
+    fill: #fff;
+}
+
+.nav-item .icon span {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    background: #fff
+}
+
+.nav .arrow {
+    padding-left: 60px;
+}
+
+.balance {
+    font-size: 14px;
+    padding: 0 20px 20px 21px;
+}
+
+.balance span {
+    color: #0d6efd;
+}
+
+.user-block {
+    border-top: 1px solid var(--border);
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 0 40px 20px;
+    font-size: 14px;
+}
+
+.avatar {
+    width: 46px;
+    height: 46px;
+    background: #eef2f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600
+}
+.main {
+    flex: 1;
+    padding: 0 0 0 60px
+}
+
+.title {
+    font-size: 30px;
+    margin: 100px 0 40px;
+    font-weight: 700
+}
