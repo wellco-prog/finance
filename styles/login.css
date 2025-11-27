@@ -1,15 +1,10 @@
-
 @font-face {
     src: url('../static/font/Roboto-Light.ttf');
     font-family: "Roboto";
 }
+
 :root {
-    /*--blue:#0a66ff;*/
-    /*--dark:#12325a;*/
-    /*--muted:#6b7280;*/
-    /*--bg:#f7f8fb;*/
     --accent: #0b63ff;
-    /*--panel:#ffffff;*/
 }
 
 
@@ -27,6 +22,7 @@ body {
 .logo img {
     height: 48px
 }
+
 h1 {
     font-weight: 500;
 }
@@ -72,11 +68,12 @@ h1 {
     margin-bottom: 10px
 }
 
-.svg-image{
+.svg-image {
     background: #e9ecef;
     border: 1px solid #e6e9ef;
     padding: 10px 12px;
 }
+
 input[type="text"]::placeholder {
     font-family: var(--font-family), sans-serif;
     font-size: 15px;

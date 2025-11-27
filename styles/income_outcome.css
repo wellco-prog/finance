@@ -153,7 +153,7 @@
     gap: 2px;
     border-top: 1px solid var(--border);
     overflow: hidden;
-    }
+}
 
 .grid-header {
     font-size: 16px;
@@ -166,7 +166,7 @@
     justify-content: center;
     text-align: center;
     border-bottom: 1px solid var(--border);
-    }
+}
 
 .grid-cell {
     background-color: white;

@@ -3,7 +3,6 @@
 }
 
 
-
 .title {
     margin-bottom: 60px;
 
@@ -18,7 +17,7 @@
     flex-wrap: wrap
 }
 
-.btn-filter{
+.btn-filter {
     width: 100px;
     padding: 9px 10px 9px 10px;
     border-radius: 8px;
@@ -30,16 +29,20 @@
     text-align: center;
     color: #6c757d;
 }
+
 .btn-filter:hover {
     background: #6c757d;
     color: #fff;
 }
-.check-date span{
-margin-right: 17px;
+
+.check-date span {
+    margin-right: 17px;
 }
-.check-date a{
-margin-right: 27px;
+
+.check-date a {
+    margin-right: 27px;
 }
+
 .charts {
     display: grid;
     grid-template-columns:1fr 1fr;
@@ -62,9 +65,11 @@ margin-right: 27px;
     color: #5b3b89;
     font-weight: 600
 }
+
 .card:first-child .pie {
     border-right: 1px solid #d9d9d9;;
 }
+
 .pie {
     width: 100%;
     height: 360px;
@@ -80,13 +85,15 @@ margin-right: 27px;
     background: conic-gradient(#e53935 0 25%, #ff9800 25% 64%, #ffca28 64% 78%, #06c2a8 78% 92%, #1877f2 92% 100%);
     box-shadow: 0 2px 8px rgba(16, 24, 40, 0.05)
 }
+
 .card:nth-child(2) .pie-sample {
     width: 360px;
     height: 360px;
     border-radius: 50%;
-    background:conic-gradient(#ffca28 0 36%, #06c2a8 36% 68%, #1877f2 68% 88%, #ff9800 88% 98%, #e53935 98% 100%);
+    background: conic-gradient(#ffca28 0 36%, #06c2a8 36% 68%, #1877f2 68% 88%, #ff9800 88% 98%, #e53935 98% 100%);
     box-shadow: 0 2px 8px rgba(16, 24, 40, 0.05)
 }
+
 .legend {
     display: flex;
     /*gap: 12px;*/
@@ -112,7 +119,6 @@ margin-right: 27px;
     .charts {
         grid-template-columns:1fr;
     }
-
 
 
     .main {

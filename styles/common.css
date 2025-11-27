@@ -7,6 +7,7 @@
     src: url('../static/font/Roboto-Light.ttf');
     font-family: "Roboto";
 }
+
 :root {
     /*--blue:#0a66ff;*/
     /*--dark:#12325a;*/
@@ -85,11 +86,12 @@ body {
     transform: rotate(90deg);
     transform-origin: 90%;
 }
+
 .nav-category-menu {
     border-right: 1px solid var(--accent);
     border-left: 1px solid var(--accent);
     border-bottom: 1px solid var(--accent);
-    border-radius: 0 0 5px 5px ;
+    border-radius: 0 0 5px 5px;
     box-sizing: border-box;
 }
 
@@ -155,6 +157,7 @@ body {
     justify-content: center;
     font-weight: 600
 }
+
 .main {
     flex: 1;
     padding: 0 0 0 60px
