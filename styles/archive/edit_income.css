@@ -65,6 +65,11 @@
 .popup-container {
     padding: 40px 40px 40px 40px;
     text-align: center;
+    width: 530px;
+    border: 1px solid #CED4DA;
+    border-radius: 5px;
+    background: #fff;
+    box-sizing: border-box;
 }
 
 .popup-btn {
