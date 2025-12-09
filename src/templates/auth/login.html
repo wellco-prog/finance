@@ -1,23 +1,11 @@
-<html lang="ru">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login</title>
-
-    <link rel="stylesheet" href="../styles/common.css">
-    <link rel="stylesheet" href="../styles/login.css">
-</head>
-<body>
-
-
 <main class="login-page" id="login">
     <div class="login-card">
         <div class="login-card-logo">
-            <img src="../static/images/logo.png" alt="logo">
+            <img src="../../../static/images/logo.png" alt="logo">
         </div>
         <h1>Вход</h1>
-        <form class="form" >
-            <div class="field">
+        <form class="login-form" >
+            <div class="field form-control">
                 <div class="svg-image">
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd"
@@ -25,13 +13,13 @@
                               fill="#6C757D"/>
                     </svg>
                 </div>
-                <div class="input-email">
+                <div class="input-field">
                     <label class="label">
-                        <input id="email" type="email" placeholder="Электронная почта" required>
+                        <input class="form-control" id="email" type="email" placeholder="Электронная почта" data-validate="email" required>
                     </label>
                 </div>
             </div>
-            <div class="field">
+            <div class="field form-control" id="field">
                 <div class="svg-image">
                     <svg width="13" height="16" viewBox="0 0 13 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd"
@@ -39,17 +27,17 @@
                               fill="#6C757D"/>
                     </svg>
                 </div>
-                <div class="input-password">
+                <div class="input-field">
                     <label class="label1">
-                        <input id="password" type="password" placeholder="Пароль" required>
+                        <input class="form-control" id="password" type="password" placeholder="Пароль" data-validate="login-password" required>
                     </label>
                 </div>
             </div>
-            <label class="checkbox"><input type="checkbox"> Запомнить меня</label>
-            <button class="btn" type="submit">Войти</button>
+            <div class="message" id="message">Неверный логин или пароль</div>
+            <label class="checkbox"><input type="checkbox" required> Запомнить меня</label>
+
+            <button class="btn" type="button" id="process">Войти</button>
         </form>
-        <div class="small">Ещё нет аккаунта? <a href="#">Пройдите регистрацию</a></div>
+        <div class="small">Ещё нет аккаунта? <a href="/signup">Пройдите регистрацию</a></div>
     </div>
 </main>
-</body>
-</html>
