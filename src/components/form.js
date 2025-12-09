@@ -52,7 +52,6 @@ export class Form {
             )
         }
 
-
         if (accessToken) {
             location.href = '/dashboard';
             return;
@@ -74,7 +73,7 @@ export class Form {
     validateField(field, element) {
         const parentElement = element.parentElement.parentElement.parentElement
         parentElement.classList.remove('is-valid', 'is-invalid');
-        if (element.dataset.validate === 'password') {
+        if (element.dataset.validate === 'password' && (element.value !== '' || element.value === null)) {
             this.#passwordField = element.value;
         }
         if (field.id === 'confirm-password' && element.value === this.#passwordField) {
@@ -136,7 +135,7 @@ export class Form {
                 localStorage.setItem('email', email);
                 localStorage.setItem('pass', password);
 
-                const result = await CustomHttp.request('http://localhost:3000/api/login', 'POST', {
+                const result = await CustomHttp.request(config.host + '/login', 'POST', {
                     email: email,
                     password: password,
                     rememberMe: rememberMe
