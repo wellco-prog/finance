@@ -18,7 +18,7 @@ export class CustomHttp {
         }
         const response = await fetch(url, params);
         if (response.status < 200 || response.status >= 300) {
-            if (response.status >= 401) {
+            if (response.status >= 400) {
                 // const result = await Auth.proccessUnauthorizedResponse();
                 if (response) {
                     return await response.json();

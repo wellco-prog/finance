@@ -63,7 +63,7 @@ export class Form {
                 this.validateField(item, event.target)
             })
         });
-        //
+
         this.processElement = document.getElementById('process');
         this.processElement.onclick = () => {
             this.processForm();
@@ -141,7 +141,12 @@ export class Form {
                 if (result) {
                     if (result.error || !result.tokens.refreshToken || !result.tokens.accessToken
                         || !result.user.name || !result.user.id) {
-                        document.getElementById('message').style.display = 'block';
+
+                        localStorage.setItem('result', result.message);
+                        document.getElementById('message').innerText = result.validation ? result.validation[0].message : result.message ;
+                        document.getElementById('field').classList.add('active-message');
+                        document.getElementById('message').classList.add('active-message');
+
                         throw new Error(result.message);
                     }
 

@@ -228,13 +228,7 @@ export class Router {
         this.profileAvatar = document.getElementById('avatar');
         this.profileLogoutWindow = document.getElementById('logout');
         this.profileFullNameElement = document.getElementById('profile-full-name');
-        //
-        // this.profileAvatar.addEventListener('click', (e) => {
-        //     const isHidden = this.profileLogoutWindow.style.display === 'none' ||
-        //         !this.profileLogoutWindow.style.display;
-        //     this.profileLogoutWindow.style.display = isHidden ? 'block' : 'none';
-        //     e.stopPropagation();
-        // });
+
         this.profileAvatar.addEventListener('click', (e) => {
             e.stopPropagation(); // Чтобы не сработал document.click сразу
 
