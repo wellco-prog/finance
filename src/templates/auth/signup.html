@@ -14,7 +14,7 @@
                 </div>
                 <div class="input-field " >
                     <label class="label">
-                        <input class="" id="name" type="text" placeholder="Имя" data-validate="name" required>
+                        <input class="" id="name" type="text" placeholder="Имя" data-validate="name"  data-tooltip="Имя должно начинаться с большой буквы, кириллицей" required>
                     </label>
                 </div>
             </div>
@@ -27,7 +27,7 @@
                 </div>
                 <div class="input-field">
                     <label class="label">
-                        <input class="form-control" id="last-name" type="text" placeholder="Фамилия"  data-validate="last-name" required>
+                        <input class="form-control" id="last-name" type="text" placeholder="Фамилия" title="Ошибка: введите корректный email" data-tooltip="Фамилия должна начинаться с большой буквы, кириллицей" data-validate="last-name" required>
                     </label>
                 </div>
             </div>
@@ -41,7 +41,7 @@
                 </div>
                 <div class="input-field">
                     <label class="label">
-                        <input class="form-control" id="email" type="email" placeholder="Электронная почта"  data-validate="email" required>
+                        <input class="form-control" id="email" type="email" placeholder="Электронная почта" data-tooltip="Email должен быть в формате mail@mail.com" data-validate="email" required>
                     </label>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                 </div>
                 <div class="input-field">
                     <label class="label1">
-                        <input class="form-control" id="password" type="password" placeholder="Пароль"  data-validate="password" required>
+                        <input class="form-control" id="password" type="password" placeholder="Пароль" data-tooltip="Пароль должен быть длинной от 6 до 16 знаков, латиницей, должна быть хоть одна большая, маленькая буква и один сппц. знак" data-validate="password" required>
                     </label>
                 </div>
             </div>
