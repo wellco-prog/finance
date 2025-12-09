@@ -119,6 +119,9 @@ export class Form {
 
                     if (result) {
                         if (result.error || !result.user) {
+                            document.getElementById('signup-message').innerText = result.validation ? result.validation[0].message : result.message ;
+                            document.getElementById('signup-field').classList.add('active-message');
+                            document.getElementById('signup-message').classList.add('active-message');
                             throw new Error(result.message);
                         }
                     }
@@ -141,8 +144,6 @@ export class Form {
                 if (result) {
                     if (result.error || !result.tokens.refreshToken || !result.tokens.accessToken
                         || !result.user.name || !result.user.id) {
-
-                        localStorage.setItem('result', result.message);
                         document.getElementById('message').innerText = result.validation ? result.validation[0].message : result.message ;
                         document.getElementById('field').classList.add('active-message');
                         document.getElementById('message').classList.add('active-message');
