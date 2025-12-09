@@ -1,0 +1,25 @@
+
+.title {
+    margin-bottom: 30px;
+}
+
+
+
+.category-input {
+
+    margin-top: 10px;
+
+}
+
+
+
+@media (max-width: 900px) {
+    .charts {
+        grid-template-columns:1fr;
+    }
+
+
+    .main {
+        padding: 28px;
+    }
+}

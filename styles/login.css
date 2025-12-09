@@ -32,7 +32,7 @@ h1 {
 }
 
 .login-card {
-    width: 520px;
+    /*width: 520px;*/
     max-width: 92%;
     padding: 48px;
     border-radius: 8px;
@@ -63,7 +63,8 @@ h1 {
     gap: 10px;
     border: 1px solid #e6e9ef;
     border-radius: 4px;
-    margin-bottom: 10px
+    margin-bottom: 10px;
+    width: 397px;
 }
 
 .svg-image {
@@ -71,9 +72,11 @@ h1 {
     border: 1px solid #e6e9ef;
     padding: 10px 12px;
 }
-
+.input-field {
+    width: 100%;
+}
 input[type="text"]::placeholder {
-    font-family: var(--font-family), sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 15px;
     line-height: 160%;
     color: #6c757d;
@@ -84,6 +87,7 @@ input[type="text"]::placeholder {
     outline: 0;
     width: 100%;
     font-size: 14px
+
 
 }
 
@@ -106,7 +110,7 @@ input[type="text"]::placeholder {
     border: 0;
     cursor: pointer;
     outline: none;
-    font-family: var(--font-family) sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 500;
     font-size: 15px;
     margin-top: 10px;
@@ -123,3 +127,10 @@ input[type="text"]::placeholder {
     text-decoration: underline
 }
 
+.message{
+    display: none;
+    font-weight: bold;
+    color: red;
+    font-size: 13px;
+    padding-bottom: 5px;
+}
