@@ -18,6 +18,8 @@ export class Router {
             styles1: '',
             load: () => {
                 this.ifNotLoginAccessDeny();
+                this.CategoryMenu();
+                // document.getElementById('nav-category').classList.add('active');
                 document.getElementById('nav-main').classList.add('active');
                 this.userProfile();
             }
@@ -52,7 +54,9 @@ export class Router {
                 styles1: '',
                 load: () => {
                     this.ifNotLoginAccessDeny();
-                    document.getElementById('nav-category').classList.add('active');
+                    this.CategoryMenu();
+                    this.toggleCategoryMenu();
+                    document.getElementById('nav-item').classList.add('active');
                     document.getElementById('nav-income').classList.add('active');
                     this.userProfile();
                 }
@@ -65,7 +69,9 @@ export class Router {
                 styles1: '',
                 load: () => {
                     this.ifNotLoginAccessDeny();
-                    document.getElementById('nav-category').classList.add('active');
+                    this.CategoryMenu();
+                    this.toggleCategoryMenu();
+                    document.getElementById('nav-item').classList.add('active');
                     document.getElementById('nav-expense').classList.add('active');
                     this.userProfile();
                 }
@@ -78,6 +84,7 @@ export class Router {
                 styles1: '',
                 load: () => {
                     this.ifNotLoginAccessDeny();
+                    this.CategoryMenu();
                     document.getElementById('nav-operations').classList.add('active');
                     const popupDelete = document.getElementById('popup-delete');
                     const btnDelOperation = document.getElementById('btn-del-operation');
@@ -93,7 +100,7 @@ export class Router {
                 styles: '/styles/login.css',
                 styles1: '/styles/validate.css',
                 load: () => {
-
+                    this.CategoryMenu();
                 }
             },{
                 route: '/operations/create',
@@ -104,9 +111,13 @@ export class Router {
                 styles1: '/styles/ec_operations.css',
                 load: () => {
                     this.ifNotLoginAccessDeny();
+                    this.CategoryMenu();
+                    this.toggleCategoryMenu();
                     document.getElementById('nav-category').classList.add('active');
+                    document.getElementById('nav-item').classList.add('active');
                     document.getElementById('nav-income').classList.add('active');
                     this.userProfile();
+
                 }
             }, {
                 route: '/expense/create',
@@ -117,7 +128,10 @@ export class Router {
                 styles1: '',
                 load: () => {
                     this.ifNotLoginAccessDeny();
+                    this.CategoryMenu();
+                    this.toggleCategoryMenu();
                     document.getElementById('nav-category').classList.add('active');
+                    document.getElementById('nav-item').classList.add('active');
                     document.getElementById('nav-expense').classList.add('active');
                     this.userProfile();
                 }
@@ -130,7 +144,10 @@ export class Router {
                 styles1: '',
                 load: () => {
                     this.ifNotLoginAccessDeny();
+                    this.CategoryMenu();
+                    this.toggleCategoryMenu();
                     document.getElementById('nav-category').classList.add('active');
+                    document.getElementById('nav-item').classList.add('active');
                     document.getElementById('nav-income').classList.add('active');
                     this.userProfile();
                 }
@@ -143,7 +160,10 @@ export class Router {
                 styles1: '/styles/ec_operations.css',
                 load: () => {
                     this.ifNotLoginAccessDeny();
+                    this.CategoryMenu();
+                    this.toggleCategoryMenu();
                     document.getElementById('nav-category').classList.add('active');
+                    document.getElementById('nav-item').classList.add('active');
                     document.getElementById('nav-income').classList.add('active');
                     this.userProfile();
                 }
@@ -156,7 +176,10 @@ export class Router {
                 styles1: '',
                 load: () => {
                     this.ifNotLoginAccessDeny();
+                    this.CategoryMenu();
+                    this.toggleCategoryMenu();
                     document.getElementById('nav-category').classList.add('active');
+                    document.getElementById('nav-item').classList.add('active');
                     document.getElementById('nav-expense').classList.add('active');
                     this.userProfile();
                 }
@@ -170,11 +193,15 @@ export class Router {
                 styles1: '',
                 load: () => {
                     this.ifNotLoginAccessDeny();
+                    this.CategoryMenu();
+                    this.toggleCategoryMenu();
                     document.getElementById('nav-category').classList.add('active');
+                    document.getElementById('nav-item').classList.add('active');
                     document.getElementById('nav-income').classList.add('active');
                     this.userProfile();
                 }
             }];
+
     }
 
     async openRoute() {
@@ -224,6 +251,9 @@ export class Router {
         }
     }
 
+
+
+
     userProfile() {
         this.profileAvatar = document.getElementById('avatar');
         this.profileLogoutWindow = document.getElementById('logout');
@@ -259,5 +289,38 @@ export class Router {
         } else {
             this.profileAvatar.style.display = 'none';
         }
+    }
+
+    toggleCategoryMenu() {
+        document.getElementById('nav-category-menu').classList.toggle('active');
+        if (document.getElementById('nav-category-menu').classList.value === 'nav-category-menu active'){
+            document.getElementById('nav-item').classList.remove('unfold');
+        } else if (document.getElementById('nav-category-menu').classList.value === 'nav-category-menu'
+            && document.getElementById('nav-category-menu').classList.value !== 'nav-category-menu active') {
+            document.getElementById('nav-item').classList.add('unfold');
+        }
+            document.getElementById('nav-item').classList.add('active');
+        document.getElementById('arrow').classList.toggle('active');
+    }
+
+    CategoryMenu(){
+        const that=this;
+        document.getElementById('nav-item').addEventListener('click', function(e) {
+            e.preventDefault();
+            that.toggleCategoryMenu();
+        });
+
+    // document.getElementById('arrow').addEventListener('click', function(e) {
+        // e.preventDefault();
+        // toggleCategoryMenu();
+    // });
+    // document.getElementById('nav-category').addEventListener('click', function(e) {
+    //     // Если клик был на тексте или стрелке - уже обработали выше
+    //     // Если клик был где-то еще в ссылке - предотвращаем переход
+    //     if (e.target === this) {
+    //         e.preventDefault();
+    //         toggleCategoryMenu();
+    //     }
+    // });
     }
 }

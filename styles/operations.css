@@ -1,6 +1,6 @@
-.nav-category-menu {
-    display: none;
-}
+/*.nav-category-menu {*/
+/*    display: none;*/
+/*}*/
 
 .button-control {
     grid-template-columns: repeat(auto-fit, minmax(200px, min(352px, 33%)));

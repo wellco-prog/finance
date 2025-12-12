@@ -2,9 +2,6 @@ body {
     position: relative;
 }
 
-.nav-category-menu {
-    display: block;
-}
 
 .categories {
     display: grid;
