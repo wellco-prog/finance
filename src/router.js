@@ -309,18 +309,5 @@ export class Router {
             e.preventDefault();
             that.toggleCategoryMenu();
         });
-
-    // document.getElementById('arrow').addEventListener('click', function(e) {
-        // e.preventDefault();
-        // toggleCategoryMenu();
-    // });
-    // document.getElementById('nav-category').addEventListener('click', function(e) {
-    //     // Если клик был на тексте или стрелке - уже обработали выше
-    //     // Если клик был где-то еще в ссылке - предотвращаем переход
-    //     if (e.target === this) {
-    //         e.preventDefault();
-    //         toggleCategoryMenu();
-    //     }
-    // });
     }
 }

@@ -52,6 +52,13 @@ export class Form {
                     valid: false
                 }
             )
+        } else if (this.page === 'login') {
+            document.getElementById('password').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    this.processForm();
+                }
+            });
         }
         if (accessToken) {
             location.href = '/dashboard';
