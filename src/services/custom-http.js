@@ -1,6 +1,7 @@
 import {Auth} from "./auth.js";
 
 export class CustomHttp {
+
     static async request(url, method = 'GET', body = null) {
         const params = {
             method: method,
@@ -10,8 +11,10 @@ export class CustomHttp {
             }
         }
         let token = localStorage.getItem(Auth.accessTokenKey);
+        console.log('Token', token);
         if (token) {
-            params.headers['x-access-token'] = token;
+            params.headers['x-auth-token'] = token;
+            console.log (params);
         }
         if (body) {
             params.body = JSON.stringify(body);
@@ -19,7 +22,7 @@ export class CustomHttp {
         const response = await fetch(url, params);
         if (response.status < 200 || response.status >= 300) {
             if (response.status >= 400) {
-                // const result = await Auth.proccessUnauthorizedResponse();
+                const result = await Auth.proccessUnauthorizedResponse();
                 if (response) {
                     return await response.json();
                 } else {
@@ -29,7 +32,5 @@ export class CustomHttp {
             throw new Error(response.message);
         }
         return await response.json();
-
-
     }
 }

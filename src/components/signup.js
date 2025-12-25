@@ -2,11 +2,11 @@ import {CustomHttp} from "../services/custom-http.js";
 import {Auth} from "../services/auth.js";
 import config from "../../config/config.js";
 
-export class Form {
+export class Signup {
     #passwordField = null;
 
-    constructor(page) {
-        this.page = page;
+    constructor(prepareNewRoute) {
+        this.prepareNewRoute = prepareNewRoute;
         this.rememberMe = null;
         this.processElement = null;
         this.processElement = document.getElementById('process');
@@ -25,55 +25,51 @@ export class Form {
                 element: null,
                 regex: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/,
                 valid: false
+            },
+            {
+                name: 'name',
+                id: 'name',
+                element: null,
+                regex: /^[А-Я][а-я]+\s*$/,
+                valid: false
+            },
+            {
+                name: 'lastName',
+                id: 'last-name',
+                element: null,
+                regex: /^[А-Я][а-я]+\s*$/,
+                valid: false
+            },
+            {
+                name: 'confirm-password',
+                id: 'confirm-password',
+                element: null,
+                regex: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/,
+                valid: false
             }
         ];
 
-        if (this.page === 'signup') {
-            this.fields.unshift(
-                {
-                    name: 'name',
-                    id: 'name',
-                    element: null,
-                    regex: /^[А-Я][а-я]+\s*$/,
-                    valid: false
-                },
-                {
-                    name: 'lastName',
-                    id: 'last-name',
-                    element: null,
-                    regex: /^[А-Я][а-я]+\s*$/,
-                    valid: false
-                },
-                {
-                    name: 'confirm-password',
-                    id: 'confirm-password',
-                    element: null,
-                    regex: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/,
-                    valid: false
-                }
-            )
-        } else if (this.page === 'login') {
+        // if (this.page === 'login') {
             document.getElementById('password').addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
                     e.preventDefault();
                     this.processForm();
                 }
             });
-        }
-        if (accessToken) {
-            location.href = '/dashboard';
-            return;
-        }
-        this.fields.forEach(item => {
-            item.element = document.getElementById(item.id);
-            item.element.addEventListener('input', (event) => {
-                this.validateField(item, event.target)
-            })
-        });
-        this.processElement.onclick = () => {
-            this.processForm();
-        }
 
+            if (accessToken) {
+                location.href = '/dashboard';
+                return;
+            }
+            this.fields.forEach(item => {
+                item.element = document.getElementById(item.id);
+                item.element.addEventListener('input', (event) => {
+                    this.validateField(item, event.target)
+                })
+            });
+            this.processElement.onclick = () => {
+                this.processForm();
+            }
     }
 
     validateField(field, element) {
@@ -112,7 +108,7 @@ export class Form {
         if (this.validateForm()) {
             const email = this.fields.find(item => item.name === 'email').element.value;
             const password = this.fields.find(item => item.name === 'password').element.value;
-            if (this.page === 'signup') {
+
                 try {
                     const result = await CustomHttp.request(config.host + '/signup', 'POST', {
                         name: this.fields.find(item => item.name === 'name').element.value,
@@ -134,7 +130,7 @@ export class Form {
                     return console.log(error);
                 }
 
-            }
+
 
             try {
                 const rememberMe = false;
@@ -157,17 +153,17 @@ export class Form {
                     }
 
                     Auth.setToken(result.tokens.accessToken, result.tokens.refreshToken);
+                    console.log(result.tokens);
                     Auth.setUserInfo({
                         fullName: result.user.name + ' ' + result.user.lastName,
                         userId: result.user.id,
                         email: email
                     })
-                    location.href = '/dashboard';
+                     await this.prepareNewRoute("dashboard");
                 }
             } catch (error) {
                 console.log(error);
             }
-
 
         } else {
             this.fields.forEach(item => {
