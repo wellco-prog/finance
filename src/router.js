@@ -4,6 +4,8 @@ import {Layout} from "./components/layout.js";
 import {Signup} from "./components/signup";
 import {CustomHttp} from "./services/custom-http";
 import config from "../config/config";
+import {Income} from "./components/income";
+import {Expense} from "./components/expense";
 
 // import {getEventListeners} from "http-proxy";
 
@@ -77,6 +79,7 @@ export class Router {
                     this.toggleCategoryMenu();
                     document.getElementById('nav-item').classList.add('active');
                     document.getElementById('nav-expense').classList.add('active');
+                    new Expense("create");
                 }
             },
             {
@@ -132,6 +135,7 @@ export class Router {
                     document.getElementById('nav-category').classList.add('active');
                     document.getElementById('nav-item').classList.add('active');
                     document.getElementById('nav-expense').classList.add('active');
+                    new Expense("add", this.prepareRoute.bind(this));
                 }
             },
             {
@@ -177,6 +181,7 @@ export class Router {
                     document.getElementById('nav-category').classList.add('active');
                     document.getElementById('nav-item').classList.add('active');
                     document.getElementById('nav-expense').classList.add('active');
+                new Expense("edit");
                 }
             },
             {
@@ -275,7 +280,7 @@ export class Router {
                 document.getElementById('nav-category').classList.remove('active');
                 document.getElementById('nav-income').classList.remove('active');
                 document.getElementById('nav-expense').classList.remove('active');
-                this.balanceUpdate();
+               await this.balanceUpdate();
             }
             contentBlock.innerHTML = await fetch(newRoute.template).then(response => response.text());
             this.stylesElement.setAttribute('href', newRoute.styles);
