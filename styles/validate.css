@@ -1,7 +1,3 @@
-
-/* Основные стили для валидации Bootstrap 5 */
-
-/* Валидный инпут */
 .form-control.is-valid,
 .was-validated .form-control:valid {
     border-color: #198754;

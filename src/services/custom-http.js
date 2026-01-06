@@ -11,7 +11,6 @@ export class CustomHttp {
             }
         }
         let token = localStorage.getItem(Auth.accessTokenKey);
-        console.log('Token', token);
         if (token) {
             params.headers['x-auth-token'] = token;
             console.log (params);

@@ -75,11 +75,11 @@
 }
 
 
-
 .grid-table {
     display: grid;
     grid-template-columns: 133px 1fr 1fr 1fr 1fr 2.5fr; /* разные ширины колонок */
     grid-template-rows: 60px auto;
+
     gap: 2px;
     border-top: 1px solid var(--border);
     overflow: hidden;
@@ -114,8 +114,28 @@
 .grid-cell:nth-child(6n) {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
     gap: 10px;
+}
+
+.operation-row {
+    display: contents;
+}
+
+.grid-cell-comment {
+    /*flex: 1;*/
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 10px;
+
+}
+
+.grid-cell-svg {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
 }
 
 .grid-cell.red {
@@ -126,6 +146,21 @@
     color: green;
 }
 
+.grid-a-operation-delete {
+    background-image: url("../static/images/trash_icon.png");
+    width: 16px;
+    height: 16px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+.grid-a-operation-edit {
+    background-image: url("../static/images/pen_icon.png");
+    width: 16px;
+    height: 16px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
 
 @media (max-width: 900px) {
     .charts {

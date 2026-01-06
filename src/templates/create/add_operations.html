@@ -1,0 +1,21 @@
+        <h2 class="title">Создание дохода/расхода</h2>
+            <div class="category">
+<!--                <input class="category-input"  id="create-type-input"       type="text" placeholder ="Тип...">-->
+                <select class="category-input" id="create-type-input" name="create-type-input" required>
+                    <option value="" disabled>Выберите тип</option>
+                    <option value="Расход">Расход</option>
+                    <option value="Доход">Доход</option>
+                </select>
+<!--                <input class="category-input"  id="create-category-input" type="text" placeholder ="Категория...">-->
+                <select class="category-input form-control"  id="create-category-input" name="create-category-input" required>
+                    <option value="">Сначала выберите тип</option>
+                </select>
+                <input class="category-input form-control"  id="create-amount-input"     type="text" placeholder ="Сумма в $...">
+                <input class="category-input form-control"  id="date-input"       type="text" placeholder ="Дата...">
+                <input class="category-input form-control"  id="create-comment-input" type="text" placeholder ="Комментарий...">
+                <div class="button-control">
+                    <button class="btn-edit"  id="btn-operations-create">Создать</button>
+                    <a href="/operations"><button class="btn-delete">Отмена</button></a>
+                </div>
+            </div>
+

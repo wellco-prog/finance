@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
+const flatpickr = require("flatpickr");
 
 module.exports = {
     entry: './src/app.js',
@@ -27,8 +28,17 @@ module.exports = {
                     "sass-loader",
                 ],
             },
+            {
+                test: /\.css$/i,
+                use: [
+                    "style-loader",  // Вставляет стили в DOM
+                    "css-loader",    // Преобразует CSS в CommonJS
+                ],
+            },
         ],
+
     },
+
     plugins: [
         new HtmlWebpackPlugin({
             template: './index.html',

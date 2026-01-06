@@ -6,6 +6,9 @@ import {CustomHttp} from "./services/custom-http";
 import config from "../config/config";
 import {Income} from "./components/income";
 import {Expense} from "./components/expense";
+import {Operations} from "./components/operations";
+import flatpickr from "flatpickr";
+import {Russian} from "flatpickr/dist/l10n/ru";
 
 // import {getEventListeners} from "http-proxy";
 
@@ -15,7 +18,18 @@ export class Router {
         this.contentElement = document.getElementById('content');
         this.stylesElement = document.getElementById('styles');
         this.styles1Element = document.getElementById('styles1');
+        this.styles2Element = document.getElementById('styles2');
         this.titleElement = document.getElementById('page-title');
+        this.oldExpenseH2 = null;
+        this.oldIncomeH2 = null;
+        this.expenseH2Delete = null;
+        this.incomeH2Delete = null;
+        this.foundExpenseItem = '';
+        this.foundIncomeItem = '';
+        this.foundExpenseDelItem = '';
+        this.foundIncomeDelItem = '';
+        this.gridCellParent = null;
+        this.foundCommentItem = '';
 
         this.routes = [
             {
@@ -52,6 +66,7 @@ export class Router {
                     new Login(this.prepareRoute.bind(this))
                 }
             },
+
             {
                 route: '/income',
                 title: 'Доход',
@@ -79,7 +94,7 @@ export class Router {
                     this.toggleCategoryMenu();
                     document.getElementById('nav-item').classList.add('active');
                     document.getElementById('nav-expense').classList.add('active');
-                    new Expense("create");
+                    new Expense();
                 }
             },
             {
@@ -92,34 +107,36 @@ export class Router {
                 load: () => {
                     this.categoryMenu();
                     document.getElementById('nav-operations').classList.add('active');
-                    const popupDelete = document.getElementById('popup-delete');
-                    const btnDelOperation = document.getElementById('btn-del-operation');
-                }
-            },
-            {
-                route: '/operations/del',
-                title: 'Удаление операции',
-                template: '/templates/auth/login.html',
-                layout: '',
-                styles: '/styles/login.css',
-                styles1: '/styles/validate.css',
-                load: () => {
-                    this.categoryMenu();
+                    new Operations('create_operations');
                 }
             },
             {
                 route: '/operations/create',
                 title: 'Создание дохода/расхода',
-                template: '/templates/create/create_operations.html',
+                template: '/templates/create/add_operations.html',
                 layout: '/templates/layout.html',
                 styles: '/styles/common_create_edit.css',
                 styles1: '/styles/ec_operations.css',
+                styles2: '/styles/validate.css',
                 load: () => {
                     this.categoryMenu();
                     this.toggleCategoryMenu();
-                    document.getElementById('nav-category').classList.add('active');
-                    document.getElementById('nav-item').classList.add('active');
-                    document.getElementById('nav-income').classList.add('active');
+                    new Operations(this.prepareRoute.bind(this));
+                }
+            },
+            {
+                route: '/operations/edit',
+                title: 'Редактирование дохода/расхода',
+                template: '/templates/edit/edit_operations.html',
+                layout: '/templates/layout.html',
+                styles: '/styles/common_create_edit.css',
+                styles1: '/styles/ec_operations.css',
+                styles2: '/styles/validate.css',
+                load: () => {
+                    this.categoryMenu();
+                    this.toggleCategoryMenu();
+                    new Operations("edit_operations", this.prepareRoute.bind(this));
+
                 }
             },
             {
@@ -135,7 +152,7 @@ export class Router {
                     document.getElementById('nav-category').classList.add('active');
                     document.getElementById('nav-item').classList.add('active');
                     document.getElementById('nav-expense').classList.add('active');
-                    new Expense("add", this.prepareRoute.bind(this));
+                    new Expense("create", this.prepareRoute.bind(this));
                 }
             },
             {
@@ -151,21 +168,7 @@ export class Router {
                     document.getElementById('nav-category').classList.add('active');
                     document.getElementById('nav-item').classList.add('active');
                     document.getElementById('nav-income').classList.add('active');
-                }
-            },
-            {
-                route: '/operations/edit',
-                title: 'Редактирование дохода/расхода',
-                template: '/templates/edit/edit_operations.html',
-                layout: '/templates/layout.html',
-                styles: '/styles/common_create_edit.css',
-                styles1: '/styles/ec_operations.css',
-                load: () => {
-                    this.categoryMenu();
-                    this.toggleCategoryMenu();
-                    document.getElementById('nav-category').classList.add('active');
-                    document.getElementById('nav-item').classList.add('active');
-                    document.getElementById('nav-income').classList.add('active');
+                    new Income("create", this.prepareRoute.bind(this));
                 }
             },
             {
@@ -181,7 +184,7 @@ export class Router {
                     document.getElementById('nav-category').classList.add('active');
                     document.getElementById('nav-item').classList.add('active');
                     document.getElementById('nav-expense').classList.add('active');
-                new Expense("edit");
+                    // new Expense("edit", this.prepareRoute.bind(this));
                 }
             },
             {
@@ -197,7 +200,6 @@ export class Router {
                     document.getElementById('nav-category').classList.add('active');
                     document.getElementById('nav-item').classList.add('active');
                     document.getElementById('nav-income').classList.add('active');
-
                 }
             }
         ];
@@ -211,12 +213,147 @@ export class Router {
         document.addEventListener('click', this.catchNewRoute.bind(this));
     }
 
+    async requestToServer(url, method, body) {
+        try {
+            const result = await CustomHttp.request(config.host + url, method, body);
+            if (result) {
+                return result;
+            }
+        } catch (error) {
+            return console.log(error);
+        }
+    }
+
     async catchNewRoute(e) {
         if (e.target.id === 'nav-item' || e.target.id === 'arrow') {
             return;
         }
         let element = null;
-        console.log();
+
+        if (e.target.id === 'btn-expense-edit') {
+            const buttonControl = e.target.closest('.button-control');
+            this.oldExpenseH2 = buttonControl.previousElementSibling;
+            element = null;
+            await this.prepareRoute('/expense/edit');
+            document.getElementById('edit-expense-category').value = this.oldExpenseH2.innerText;
+            const result = await CustomHttp.request(config.host + '/categories/expense')
+            this.foundExpenseItem = result.find(item => item.title === this.oldExpenseH2.innerText);
+            console.log(this.foundExpenseItem.id);
+        }
+        if (e.target.id === 'btn-income-edit') {
+            const buttonControl = e.target.closest('.button-control');
+            this.oldIncomeH2 = buttonControl.previousElementSibling;
+            element = null;
+            await this.prepareRoute('/income/edit');
+            document.getElementById('edit-income-category').value = this.oldIncomeH2.innerText;
+            const result = await CustomHttp.request(config.host + '/categories/income')
+            this.foundIncomeItem = result.find(item => item.title === this.oldIncomeH2.innerText);
+            console.log(this.foundIncomeItem.id);
+        }
+
+        if (e.target.id === 'btn-expense-edit-save') {
+            const newExpenseH2 = document.getElementById('edit-expense-category')
+            if (newExpenseH2.value !== '') {
+                await this.requestToServer(
+                    '/categories/expense/' + this.foundExpenseItem.id,
+                    'PUT',
+                    {"title": newExpenseH2.value});
+            }
+            await this.prepareRoute('/expense');
+        }
+        if (e.target.id === 'btn-income-edit-save') {
+            const newIncomeH2 = document.getElementById('edit-income-category')
+            console.log(this.foundIncomeItem.id);
+            if (newIncomeH2.value !== '') {
+                await this.requestToServer(
+                    '/categories/income/' + this.foundIncomeItem.id,
+                    'PUT',
+                    {"title": newIncomeH2.value});
+            }
+            await this.prepareRoute('/income');
+        }
+        if (e.target.id === 'btn-expense-delete') {
+            document.getElementById('popup-delete').style.display = 'flex';
+            document.getElementById('popup-title').innerText = 'Вы действительно хотите удалить категорию?'
+            const buttonControl = e.target.closest('.button-control');
+            this.expenseH2Delete = buttonControl.previousElementSibling;
+            element = null;
+            const result = await CustomHttp.request(config.host + '/categories/expense')
+            this.foundExpenseDelItem = result.find(item => item.title === this.expenseH2Delete.innerText);
+            console.log(this.foundExpenseDelItem.id);
+        }
+        if (e.target.id === 'btn-income-delete') {
+            document.getElementById('popup-delete').style.display = 'flex';
+            document.getElementById('popup-title').innerText =
+                'Вы действительно хотите удалить категорию?\nСвязанные доходы останутся без категории?'
+            const buttonControl = e.target.closest('.button-control');
+            this.incomeH2Delete = buttonControl.previousElementSibling;
+            element = null;
+            const result = await CustomHttp.request(config.host + '/categories/income')
+            this.foundIncomeDelItem = result.find(item => item.title === this.incomeH2Delete.innerText);
+            console.log(this.foundIncomeDelItem.id);
+        }
+        if (e.target.id === 'btn-delete') {
+            if (window.location.pathname === '/expense') {
+                await this.requestToServer(
+                    '/categories/expense/' + this.foundExpenseDelItem.id,
+                    'DELETE',
+                    {});
+                await this.prepareRoute('/expense');
+            } else if (window.location.pathname === '/income') {
+                await this.requestToServer(
+                    '/categories/income/' + this.foundIncomeDelItem.id,
+                    'DELETE',
+                    {});
+                await this.prepareRoute('/income');
+            } else if (window.location.pathname === '/operations') {
+                await this.requestToServer(
+                    '/operations/' + this.foundIncomeDelItem.id,
+                    'DELETE',
+                    {});
+                await this.prepareRoute('/operations');
+            }
+
+        }
+        if (e.target.id === 'btn-escape') {
+            document.getElementById('popup-delete').style.display = 'none';
+        }
+        if (e.target.id === 'grid-a-operation-delete') {
+            document.getElementById('popup-delete').style.display = 'flex';
+            document.getElementById('popup-title').innerText =
+                'Вы действительно хотите удалить операцию?'
+            const gridRowElement = e.target.closest('.operation-row');
+            element = null;
+            console.log(gridRowElement.dataset.id);
+            const result = await CustomHttp.request(config.host + '/operations?period=all')
+            this.foundCommentItem = result.find(item => item.id === Number(gridRowElement.dataset.id));
+            console.log(this.foundCommentItem.id);
+        }
+        if (e.target.id === 'grid-a-operation-edit') {
+            this.CommentItemId = e.target.dataset.id;
+            console.log(this.CommentItemId);
+            await this.prepareRoute('/operations/edit?id='+this.CommentItemId);
+            element = null;
+        }
+        if (e.target.id === 'btn-add-operations-income') {
+            element = null;
+            await this.prepareRoute('/operations/create?type=add_income');
+        }
+        if (e.target.id === 'btn-add-operations-expense') {
+            element = null;
+            await this.prepareRoute('/operations/create?type=add_expense');
+        }
+        if (e.target.id === 'date-input') {
+            flatpickr("#date-input", {
+                locale: Russian,
+                dateFormat: "Y-m-d",
+                altInput: true,
+                altFormat: "Y-m-d",
+                allowInput: true,
+                placeholder: "Выберите дату",
+                static: false
+            });
+        }
         if (e.target.nodeName === 'A') {
             element = e.target;
         } else if (e.target.parentNode.nodeName === 'A') {
@@ -228,6 +365,7 @@ export class Router {
             if (!url || url === '#' || url.startsWith('javascript:void(0)')) {
                 return;
             }
+
             await this.prepareRoute(url)
 
         }
@@ -239,6 +377,7 @@ export class Router {
         }
 
     }
+
     async balanceUpdate() {
         try {
             const result = await CustomHttp.request(config.host + '/balance')
@@ -251,6 +390,7 @@ export class Router {
         }
 
     }
+
     async prepareRoute(url) {
         history.pushState({}, '', url);
         await this.activeRoute();
@@ -280,12 +420,15 @@ export class Router {
                 document.getElementById('nav-category').classList.remove('active');
                 document.getElementById('nav-income').classList.remove('active');
                 document.getElementById('nav-expense').classList.remove('active');
-               await this.balanceUpdate();
+                await this.balanceUpdate();
             }
             contentBlock.innerHTML = await fetch(newRoute.template).then(response => response.text());
             this.stylesElement.setAttribute('href', newRoute.styles);
             if (newRoute.styles1) {
                 this.styles1Element.setAttribute('href', newRoute.styles1);
+            }
+            if (newRoute.styles2) {
+                this.styles2Element.setAttribute('href', newRoute.styles2);
             }
 
         } else {

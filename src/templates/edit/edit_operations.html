@@ -1,12 +1,21 @@
         <h2 class="title">Редактирование дохода/расхода</h2>
             <div class="category">
-                <input class="category-input" type="text" placeholder ="Доход">
-                <input class="category-input" type="text" placeholder ="Зарплата">
-                <input class="category-input" type="text" placeholder ="500$">
-                <input class="category-input" type="text" placeholder ="11.09.2022">
-                <input class="category-input" type="text" placeholder ="Комментарий...">
+
+<!--                <input class="category-input" id="operations-type-edit-input" type="text" placeholder ="Доход">-->
+                <select class="category-input" id="operations-type-edit-input" name="create-type-input" required>
+                    <option value="" disabled>Выберите тип</option>
+                    <option value="Расход">Расход</option>
+                    <option value="Доход">Доход</option>
+                </select>
+                <select class="category-input form-control"  id="operations-category-edit-input" name="create-category-input" required>
+                    <option value="">Сначала выберите тип</option>
+                </select>
+<!--                <input class="category-input form-control" id="operations-category-input"  type="text" placeholder ="Зарплата">-->
+                <input class="category-input form-control" id="operations-amount-input"      type="text" placeholder ="500$">
+                <input class="category-input form-control" id="date-input"        type="text" placeholder ="11.09.2022">
+                <input class="category-input form-control" id="operations-comment-input"  type="text" placeholder ="Комментарий...">
                 <div class="button-control">
-                    <button class="btn-edit">Создать</button>
+                    <button class="btn-edit"  id="btn-operations-save" >Сохранить</button>
                     <a href="/operations"><button class="btn-delete">Отмена</button></a>
                 </div>
             </div>
