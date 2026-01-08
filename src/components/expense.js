@@ -25,19 +25,7 @@ export class Expense {
 
                 })
                 break;
-            case "edit":
-                const oldCategory = document.getElementById('edit-expense-category').value;
-                console.log(oldCategory);
-                document.getElementById("btn-expense-edit-save").addEventListener("click", (e) => {
-                    this.editCategory(oldCategory);
-                    this.prepareRoute('/expense');
-                })
-                break;
-            case " ":
-                document.getElementById("btn-create").addEventListener("click", (e) => {
-                    this.editCategory();
-                })
-                break;
+
         }
     }
 
@@ -106,25 +94,5 @@ export class Expense {
         }
     }
 
-    async addCategory() {
-        const newCategory = document.getElementById("new-category-expense").value;
-        await this.requestToServer(
-            '/categories/expense',
-            'POST',
-            {
-                "title": newCategory,
-            });
-    }
 
-    async editCategory(oldValue) {
-    }
-
-        addCategoriesToBase()
-        {
-        }
-
-        deleteCategory()
-        {
-
-        }
     }

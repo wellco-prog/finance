@@ -11,38 +11,49 @@ export class Operations {
             this.id = urlParams.get("id");
             this.type = urlParams.get("type");
         }
-        console.log(this.type);
         this.fields = [
             {
                 name: 'category',
-                id: 'create-category-input',
+                id: 'category-input',
                 element: null,
+                regex: /.+/,
                 // regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                valid: false
+                valid: false,
+                value: null,
+                error_message: "Выберите категорию"
             },
             {
                 name: 'amount',
-                id: 'create-amount-input',
+                id: 'amount-input',
                 element: null,
                 regex: /^[0-9]+$/,
                 // /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/,
-                valid: false
+                valid: false,
+                value: null,
+                error_message: "Только цифры"
             },
             {
                 name: 'date',
-                id: 'create-date-input',
+                id: 'date-input',
                 element: null,
+                regex: /.+/,
                 // regex: /^[А-Я][а-я]+\s*$/,
-                valid: false
+                valid: false,
+                value: null,
+                error_message: "Введите дату"
             },
             {
                 name: 'comment',
-                id: 'create-comment-input',
+                id: 'comment-input',
                 element: null,
-                regex: /^[А-Я][а-я]+\s*$/,
-                valid: false
+                regex: /.+/,
+                valid: false,
+                value: null,
+                error_message: "Введите комментарий"
             }
         ];
+
+
         this.init();
     }
 
@@ -53,53 +64,24 @@ export class Operations {
             expense: expenseCategories,
             income: incomeCategories
         };
-
-
         switch (this.type || this.action) {
             case "add_expense":
-                document.getElementById("create-type-input").disabled = true;
+                document.getElementById("type-input").disabled = true;
                 document.getElementById('nav-category').classList.add('active');
                 document.getElementById('nav-item').classList.add('active');
                 document.getElementById('nav-expense').classList.add('active');
-                document.getElementById("create-type-input").value = 'Расход';
-                this.selectCategory('expense', 'create-category-input');
-                document.getElementById('create-type-input').addEventListener('change', (e) => {
-                    const type = e.target.value;
-                    this.selectCategory(type,'create-category-input')
-                });
+                document.getElementById("type-input").value = 'Расход';
+                this.selectCategory('expense', 'category-input');
+                this.saveToBackend('expense','/operations', 'POST');
                 break;
             case "add_income":
-                // document.getElementById('btn-operations-create').addEventListener('click', (e) => {
-                //     const createTypeInput = document.getElementById("create-type-input");
-                //     const createCategoryInput = document.getElementById("create-category-input");
-                //     const createAmountInput = document.getElementById("create-amount-input");
-                //     const createDateInput = document.getElementById("create-date-input");
-                //     const createCommentInput = document.getElementById("create-comment-input");
-                //
-                //
-                // })
-                // document.getElementById("create-type-input").value = "income";
-                document.getElementById("create-type-input").disabled = true;
+                document.getElementById("type-input").value = 'Доход';
+                document.getElementById("type-input").disabled = true;
                 document.getElementById('nav-category').classList.add('active');
                 document.getElementById('nav-item').classList.add('active');
                 document.getElementById('nav-income').classList.add('active');
-                document.getElementById("create-type-input").value = 'Доход';
-                this.selectCategory('income', 'create-category-input');
-                document.getElementById('create-type-input').addEventListener('change', (e) => {
-                    const type = e.target.value;
-                    this.selectCategory(type,'create-category-input')
-                });
-
-                // if (categoryInput.value !== '') {
-                //     this.requestToServer('/operations', 'POST', {
-                //         "type": createTypeInput,
-                //         "amount": createAmountInput,
-                //         "date": createDateInput,
-                //         "comment": createCommentInput,
-                //         "category_id": 11
-                //     });
-                //     this.prepareRoute('/operations');
-                // }
+                this.selectCategory('income', 'category-input');
+                this.saveToBackend('income', '/operations','POST');
                 break;
             case "create_operations":
                 await this.createOperationsOnPage();
@@ -107,52 +89,27 @@ export class Operations {
             case "edit_operations":
                 const result = await CustomHttp.request(config.host + '/operations?period=all')
                 const foundCommentItem = result.find(item => item.id === Number(this.id));
-                console.log('foundCommentItem', foundCommentItem);
                 if (foundCommentItem.type === 'expense') {
-                    document.getElementById("operations-type-edit-input").value = 'Расход';
+                    document.getElementById("type-input").value = 'Расход';
                     document.getElementById('nav-category').classList.add('active');
                     document.getElementById('nav-item').classList.add('active');
                     document.getElementById('nav-expense').classList.add('active');
-                    this.selectCategory('expense','operations-category-edit-input')
-                    document.getElementById('operations-type-edit-input').addEventListener('change', (e) => {
-                        const type = e.target.value;
-                        this.selectCategory(type,'operations-category-edit-input')
-                    });
+                    this.selectCategory('expense', 'category-input')
                 } else if (foundCommentItem.type === 'income') {
-                    document.getElementById("operations-type-edit-input").value = 'Доход';
+                    document.getElementById("type-input").value = 'Доход';
                     document.getElementById('nav-category').classList.add('active');
                     document.getElementById('nav-item').classList.add('active');
                     document.getElementById('nav-income').classList.add('active');
-                    this.selectCategory('income','operations-category-edit-input')
-                    document.getElementById('operations-type-edit-input').addEventListener('change', (e) => {
-                        const type = e.target.value;
-                        this.selectCategory(type,'operations-category-edit-input')
-                    });
+                    this.selectCategory('income', 'category-input')
                 }
-                document.getElementById("operations-type-edit-input").disabled = true;
-                document.getElementById("operations-category-edit-input").value = foundCommentItem.category;
-                document.getElementById("operations-amount-input").value = new Intl.NumberFormat('ru-RU').format(foundCommentItem.amount) + '$';
-                let [year, month, day] = foundCommentItem.date.split('-');
-                document.getElementById("date-input").value = `${day}.${month}.${year}`;
-                document.getElementById("operations-comment-input").value = foundCommentItem.comment;
+                document.getElementById("type-input").disabled = true;
+                document.getElementById("category-input").value = foundCommentItem.category;
+                document.getElementById("amount-input").value = foundCommentItem.amount;
+                // let [year, month, day] = foundCommentItem.date.split('-');
+                document.getElementById("date-input").value = foundCommentItem.date; //`${day}.${month}.${year}`;
+                document.getElementById("comment-input").value = foundCommentItem.comment;
+                this.saveToBackend(foundCommentItem.type,'/operations/' + this.id,'PUT');
                 break;
-        }
-    }
-
-    selectCategory(type,idElement) {
-        const categorySelect = document.getElementById(idElement);
-        if (type) {
-            categorySelect.innerHTML = '<option value="">Выберите категорию</option>';
-
-            this.categoryData[type].forEach(category => {
-                const option = document.createElement('option');
-                option.value = category.title;
-                option.textContent = category.title;
-                categorySelect.appendChild(option);
-            });
-        } else {
-            categorySelect.disabled = true;
-            categorySelect.innerHTML = '<option value="">Сначала выберите тип</option>';
         }
     }
 
@@ -250,6 +207,55 @@ export class Operations {
         }
     }
 
+    selectCategory(type, idElement) {
+        const categorySelect = document.getElementById(idElement);
+        if (type) {
+            categorySelect.innerHTML = '<option value="">Выберите категорию</option>';
+
+            this.categoryData[type].forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.title;
+                option.textContent = category.title;
+                categorySelect.appendChild(option);
+            });
+        } else {
+            categorySelect.disabled = true;
+            categorySelect.innerHTML = '<option value="">Сначала выберите тип</option>';
+        }
+    }
+
+    saveToBackend(type,url,method) {
+        document.getElementById('btn-operations-save').addEventListener('click', () => {
+            // const id = this.categoryData[type].find(item => this.fields[0].value === item.title).id;
+
+            this.fields.forEach(item => {
+                item.element = document.getElementById(item.id);
+                if (document.getElementById("date-input-alt")) {
+                    document.getElementById("date-input-alt").classList.remove('is-invalid', 'is-valid');
+                }
+                item.element.classList.remove('is-invalid', 'is-valid');
+                if (!item.regex.test(item.element.value)) {
+                    item.element.classList.add('is-invalid');
+                } else {
+                    item.value = item.element.value;
+                    item.valid = true;
+                }
+            });
+            if (this.fields.every(item => item.valid)) {
+                this.requestToServer(url, method, {
+                    "type": type,
+                    "amount": this.fields[1].value,
+                    "date": this.fields[2].value,
+                    "comment": this.fields[3].value,
+                    "category_id": this.categoryData[type].find(item => this.fields[0].value === item.title).id
+                });
+                this.prepareRoute('/operations');
+            }
+        })
+
+
+    }
+
     async requestToServer(url, method, body) {
         try {
             const result = await CustomHttp.request(config.host + url, method, body);
@@ -260,6 +266,8 @@ export class Operations {
             return console.log(error);
         }
     }
+
+
 
 
 }

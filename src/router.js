@@ -1,6 +1,5 @@
 import {Auth} from "./services/auth.js";
 import {Login} from "./components/login.js";
-import {Layout} from "./components/layout.js";
 import {Signup} from "./components/signup";
 import {CustomHttp} from "./services/custom-http";
 import config from "../config/config";
@@ -28,8 +27,6 @@ export class Router {
         this.foundIncomeItem = '';
         this.foundExpenseDelItem = '';
         this.foundIncomeDelItem = '';
-        this.gridCellParent = null;
-        this.foundCommentItem = '';
 
         this.routes = [
             {
@@ -107,7 +104,7 @@ export class Router {
                 load: () => {
                     this.categoryMenu();
                     document.getElementById('nav-operations').classList.add('active');
-                    new Operations('create_operations');
+                    new Operations('create_operations', this.prepareRoute.bind(this));
                 }
             },
             {
@@ -121,7 +118,7 @@ export class Router {
                 load: () => {
                     this.categoryMenu();
                     this.toggleCategoryMenu();
-                    new Operations(this.prepareRoute.bind(this));
+                    new Operations('', this.prepareRoute.bind(this));
                 }
             },
             {
@@ -184,7 +181,6 @@ export class Router {
                     document.getElementById('nav-category').classList.add('active');
                     document.getElementById('nav-item').classList.add('active');
                     document.getElementById('nav-expense').classList.add('active');
-                    // new Expense("edit", this.prepareRoute.bind(this));
                 }
             },
             {
@@ -238,7 +234,6 @@ export class Router {
             document.getElementById('edit-expense-category').value = this.oldExpenseH2.innerText;
             const result = await CustomHttp.request(config.host + '/categories/expense')
             this.foundExpenseItem = result.find(item => item.title === this.oldExpenseH2.innerText);
-            console.log(this.foundExpenseItem.id);
         }
         if (e.target.id === 'btn-income-edit') {
             const buttonControl = e.target.closest('.button-control');
@@ -248,11 +243,10 @@ export class Router {
             document.getElementById('edit-income-category').value = this.oldIncomeH2.innerText;
             const result = await CustomHttp.request(config.host + '/categories/income')
             this.foundIncomeItem = result.find(item => item.title === this.oldIncomeH2.innerText);
-            console.log(this.foundIncomeItem.id);
         }
 
         if (e.target.id === 'btn-expense-edit-save') {
-            const newExpenseH2 = document.getElementById('edit-expense-category')
+            const newExpenseH2 = document.getElementById('edit-expense-category');
             if (newExpenseH2.value !== '') {
                 await this.requestToServer(
                     '/categories/expense/' + this.foundExpenseItem.id,
@@ -262,8 +256,7 @@ export class Router {
             await this.prepareRoute('/expense');
         }
         if (e.target.id === 'btn-income-edit-save') {
-            const newIncomeH2 = document.getElementById('edit-income-category')
-            console.log(this.foundIncomeItem.id);
+            const newIncomeH2 = document.getElementById('edit-income-category');
             if (newIncomeH2.value !== '') {
                 await this.requestToServer(
                     '/categories/income/' + this.foundIncomeItem.id,
@@ -280,7 +273,6 @@ export class Router {
             element = null;
             const result = await CustomHttp.request(config.host + '/categories/expense')
             this.foundExpenseDelItem = result.find(item => item.title === this.expenseH2Delete.innerText);
-            console.log(this.foundExpenseDelItem.id);
         }
         if (e.target.id === 'btn-income-delete') {
             document.getElementById('popup-delete').style.display = 'flex';
@@ -291,7 +283,6 @@ export class Router {
             element = null;
             const result = await CustomHttp.request(config.host + '/categories/income')
             this.foundIncomeDelItem = result.find(item => item.title === this.incomeH2Delete.innerText);
-            console.log(this.foundIncomeDelItem.id);
         }
         if (e.target.id === 'btn-delete') {
             if (window.location.pathname === '/expense') {
@@ -321,17 +312,12 @@ export class Router {
         if (e.target.id === 'grid-a-operation-delete') {
             document.getElementById('popup-delete').style.display = 'flex';
             document.getElementById('popup-title').innerText =
-                'Вы действительно хотите удалить операцию?'
-            const gridRowElement = e.target.closest('.operation-row');
+                'Вы действительно хотите удалить операцию?';
             element = null;
-            console.log(gridRowElement.dataset.id);
-            const result = await CustomHttp.request(config.host + '/operations?period=all')
-            this.foundCommentItem = result.find(item => item.id === Number(gridRowElement.dataset.id));
-            console.log(this.foundCommentItem.id);
+            this.foundIncomeDelItem = e.target.dataset.id;
         }
         if (e.target.id === 'grid-a-operation-edit') {
             this.CommentItemId = e.target.dataset.id;
-            console.log(this.CommentItemId);
             await this.prepareRoute('/operations/edit?id='+this.CommentItemId);
             element = null;
         }
@@ -343,6 +329,7 @@ export class Router {
             element = null;
             await this.prepareRoute('/operations/create?type=add_expense');
         }
+
         if (e.target.id === 'date-input') {
             flatpickr("#date-input", {
                 locale: Russian,
@@ -351,7 +338,13 @@ export class Router {
                 altFormat: "Y-m-d",
                 allowInput: true,
                 placeholder: "Выберите дату",
-                static: false
+                static: false,
+                onReady: function(selectedDates, dateStr, instance) {
+                    if (instance.altInput) {
+                        instance.altInput.id = instance.input.id + "-alt";
+                        instance.altInput.dataset.originalId = instance.input.id;
+                    }
+                }
             });
         }
         if (e.target.nodeName === 'A') {
@@ -381,7 +374,6 @@ export class Router {
     async balanceUpdate() {
         try {
             const result = await CustomHttp.request(config.host + '/balance')
-            console.log(result);
             if (result) {
                 document.getElementById('balance').innerText = result.balance + '$';
             }
@@ -399,7 +391,6 @@ export class Router {
 
     async activeRoute() {
         const urlRoute = window.location.pathname;
-        console.log(urlRoute);
         if (urlRoute === '/logout') {
             await Auth.logout();
             history.pushState({}, '', '/login');
