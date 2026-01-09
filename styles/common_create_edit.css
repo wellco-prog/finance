@@ -11,6 +11,8 @@
     padding: 10px 0 10px 16px;
     outline: none;
     box-sizing: border-box;
+    font-family: Roboto, sans-serif;
+    font-size: 15px;
 }
 
 .category-input::placeholder {

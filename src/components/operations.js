@@ -1,5 +1,6 @@
 import {CustomHttp} from "../services/custom-http.js";
 import config from "../../config/config.js";
+import flatpickr from "flatpickr";
 
 export class Operations {
     constructor(action, prepareRoute) {
@@ -10,7 +11,11 @@ export class Operations {
         if (urlParams) {
             this.id = urlParams.get("id");
             this.type = urlParams.get("type");
+            this.period = urlParams.get("period");
+            this.dateFrom = urlParams.get("dateFrom");
+            this.dateTo = urlParams.get("dateTo");
         }
+
         this.fields = [
             {
                 name: 'category',
@@ -87,8 +92,9 @@ export class Operations {
                 await this.createOperationsOnPage();
                 break;
             case "edit_operations":
-                const result = await CustomHttp.request(config.host + '/operations?period=all')
-                const foundCommentItem = result.find(item => item.id === Number(this.id));
+                const result = await CustomHttp.request(config.host + '/operations?period=month');
+                console.log(result);
+                let foundCommentItem = result.find(item => item.id === Number(this.id));
                 if (foundCommentItem.type === 'expense') {
                     document.getElementById("type-input").value = 'Расход';
                     document.getElementById('nav-category').classList.add('active');
@@ -105,8 +111,8 @@ export class Operations {
                 document.getElementById("type-input").disabled = true;
                 document.getElementById("category-input").value = foundCommentItem.category;
                 document.getElementById("amount-input").value = foundCommentItem.amount;
-                // let [year, month, day] = foundCommentItem.date.split('-');
-                document.getElementById("date-input").value = foundCommentItem.date; //`${day}.${month}.${year}`;
+                let [year, month, day] = foundCommentItem.date.split('-');
+                document.getElementById("date-input").value = `${day}.${month}.${year}`;
                 document.getElementById("comment-input").value = foundCommentItem.comment;
                 this.saveToBackend(foundCommentItem.type,'/operations/' + this.id,'PUT');
                 break;
@@ -140,8 +146,7 @@ export class Operations {
             operationTableElement.appendChild(operationHeaderSumElement);
             operationTableElement.appendChild(operationHeaderDateElement);
             operationTableElement.appendChild(operationHeaderCommentElement);
-
-            const result = await CustomHttp.request(config.host + '/operations?period=all');
+            const result = await CustomHttp.request(config.host + '/operations?period='+ this.period + '&dateFrom='+ this.dateFrom + '&dateTo=' + this.dateTo);
             if (result) {
                 result.forEach(item => {
                     const rowElement = document.createElement("div");
@@ -241,11 +246,13 @@ export class Operations {
                     item.valid = true;
                 }
             });
+            console.log(this.fields);
+            let [day,month,year] = this.fields[2].value.split('.');
             if (this.fields.every(item => item.valid)) {
                 this.requestToServer(url, method, {
                     "type": type,
                     "amount": this.fields[1].value,
-                    "date": this.fields[2].value,
+                    "date": `${year}-${month}-${day}`,
                     "comment": this.fields[3].value,
                     "category_id": this.categoryData[type].find(item => this.fields[0].value === item.title).id
                 });

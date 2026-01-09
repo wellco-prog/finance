@@ -9,7 +9,6 @@ import {Operations} from "./components/operations";
 import flatpickr from "flatpickr";
 import {Russian} from "flatpickr/dist/l10n/ru";
 
-// import {getEventListeners} from "http-proxy";
 
 
 export class Router {
@@ -27,6 +26,7 @@ export class Router {
         this.foundIncomeItem = '';
         this.foundExpenseDelItem = '';
         this.foundIncomeDelItem = '';
+        this.foundOperationDelItem = null;
 
         this.routes = [
             {
@@ -103,6 +103,7 @@ export class Router {
                 styles1: '',
                 load: () => {
                     this.categoryMenu();
+                    document.getElementById('btn-filter-today').classList.add('active');
                     document.getElementById('nav-operations').classList.add('active');
                     new Operations('create_operations', this.prepareRoute.bind(this));
                 }
@@ -285,6 +286,7 @@ export class Router {
             this.foundIncomeDelItem = result.find(item => item.title === this.incomeH2Delete.innerText);
         }
         if (e.target.id === 'btn-delete') {
+            console.log('/operations/' + this.foundOperationDelItem);
             if (window.location.pathname === '/expense') {
                 await this.requestToServer(
                     '/categories/expense/' + this.foundExpenseDelItem.id,
@@ -299,7 +301,7 @@ export class Router {
                 await this.prepareRoute('/income');
             } else if (window.location.pathname === '/operations') {
                 await this.requestToServer(
-                    '/operations/' + this.foundIncomeDelItem.id,
+                    '/operations/' + this.foundOperationDelItem,
                     'DELETE',
                     {});
                 await this.prepareRoute('/operations');
@@ -314,11 +316,11 @@ export class Router {
             document.getElementById('popup-title').innerText =
                 'Вы действительно хотите удалить операцию?';
             element = null;
-            this.foundIncomeDelItem = e.target.dataset.id;
+            this.foundOperationDelItem = e.target.dataset.id;
         }
         if (e.target.id === 'grid-a-operation-edit') {
             this.CommentItemId = e.target.dataset.id;
-            await this.prepareRoute('/operations/edit?id='+this.CommentItemId);
+            await this.prepareRoute('/operations/edit?id=' + this.CommentItemId);
             element = null;
         }
         if (e.target.id === 'btn-add-operations-income') {
@@ -329,23 +331,109 @@ export class Router {
             element = null;
             await this.prepareRoute('/operations/create?type=add_expense');
         }
-
-        if (e.target.id === 'date-input') {
-            flatpickr("#date-input", {
-                locale: Russian,
-                dateFormat: "Y-m-d",
-                altInput: true,
-                altFormat: "Y-m-d",
-                allowInput: true,
-                placeholder: "Выберите дату",
-                static: false,
-                onReady: function(selectedDates, dateStr, instance) {
-                    if (instance.altInput) {
-                        instance.altInput.id = instance.input.id + "-alt";
-                        instance.altInput.dataset.originalId = instance.input.id;
-                    }
-                }
+        if (e.target.id === 'btn-filter-today') {
+            await this.prepareRoute('/operations?period=');
+            document.querySelectorAll('.btn-filter.active').forEach(button => {
+                button.classList.remove('active');
             });
+            document.getElementById('btn-filter-today').classList.add('active');
+        }
+        if (e.target.id === 'btn-filter-week') {
+            await this.prepareRoute('/operations?period=week');
+            document.querySelectorAll('.btn-filter.active').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.getElementById('btn-filter-week').classList.add('active');
+        }
+
+        if (e.target.id === 'btn-filter-month') {
+            await this.prepareRoute('/operations?period=month');
+            document.querySelectorAll('.btn-filter.active').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.getElementById('btn-filter-month').classList.add('active');
+        }
+        if (e.target.id === 'btn-filter-year') {
+            await this.prepareRoute('/operations?period=year');
+            document.querySelectorAll('.btn-filter.active').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.getElementById('btn-filter-year').classList.add('active');
+        }
+        if (e.target.id === 'btn-filter-all') {
+            await this.prepareRoute('/operations?period=all');
+            document.querySelectorAll('.btn-filter.active').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.getElementById('btn-filter-all').classList.add('active');
+        }
+        if (e.target.id === 'btn-filter-interval') {
+            const date = new Date();
+            const todayDay = String(date.getDate()).padStart(2, '0');
+            const todayMonth = String(date.getMonth() + 1).padStart(2, '0');
+            const todayYear = date.getFullYear();
+            const today = `${todayDay}.${todayMonth}.${todayYear}`;
+            document.getElementById('datepicker1').value = today;
+            document.getElementById('datepicker2').value = today;
+            let [fromDay, fromMonth, fromYear] = document.getElementById('datepicker1').value.split('.');
+            let [toDay, toMonth, toYear] = document.getElementById('datepicker2').value.split('.');
+            await this.prepareRoute(`/operations?period=interval&dateFrom=${fromYear}-${fromMonth}-${fromDay}&dateTo=${toYear}-${toMonth}-${toDay}`);
+            document.querySelectorAll('.btn-filter.active').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.getElementById('btn-filter-interval').classList.add('active');
+
+            document.getElementById('check-date').style.display = "block";
+            document.getElementById('datepicker1').value = today;
+            document.getElementById('datepicker2').value = today;
+            // document.getElementById('datepicker1-alt').focus();
+        }
+        if (e.target.id === 'btn-ok-interval') {
+            let [fromDay, fromMonth, fromYear] = document.getElementById('datepicker1').value.split('.');
+            let [toDay, toMonth, toYear] = document.getElementById('datepicker2').value.split('.');
+            const datefrom = document.getElementById('datepicker1').value;
+            const dateto = document.getElementById('datepicker2').value;
+            await this.prepareRoute(`/operations?period=interval&dateFrom=${fromYear}-${fromMonth}-${fromDay}&dateTo=${toYear}-${toMonth}-${toDay}`);
+            document.querySelectorAll('.btn-filter.active').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.getElementById('btn-filter-interval').classList.add('active');
+            document.getElementById('check-date').style.display = "block";
+            document.getElementById('datepicker1').value = datefrom;
+            document.getElementById('datepicker2').value = dateto;
+            // document.getElementById('datepicker1').focus();
+        }
+        if (e.target.id === 'date-input' || e.target.id === 'datepicker1' || e.target.id === 'datepicker2') {
+            e.preventDefault();
+            e.stopPropagation();
+            const element = e.target;
+            if (!element._flatpickr) {
+                flatpickr(element, {
+                    locale: Russian,
+                    dateFormat: "d.m.Y",//"Y-m-d"
+                    altInput: true,
+                    altFormat: "d.m.Y",
+                    allowInput: true,
+                    // maxDate: new Date(),
+                    placeholder: "Выберите дату",
+                    static: false,
+                    clickOpens: true,
+                    // inline: false,
+                    // disableMobile: true,
+                    onReady: function (selectedDates, dateStr, instance) {
+                        if (instance.altInput) {
+                            instance.altInput.id = instance.input.id + "-alt";
+                            instance.altInput.dataset.originalId = instance.input.id;
+                        }
+                    }
+                });
+            }
+            try {
+                element._flatpickr.open();
+            } catch (error) {
+                return console.log(error);
+            }
+
         }
         if (e.target.nodeName === 'A') {
             element = e.target;
